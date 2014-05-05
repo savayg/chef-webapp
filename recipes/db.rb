@@ -18,7 +18,7 @@ case db_type
       owner app.user.name
     end
 
-    if app[:postgresql] && app.postgresql[:replication] && app.postgresql[:replication] == 'slave'
+    if app[:postgresql] && app.postgresql[:nodes] && app.private_ip != app.database.host
       service 'postgresql' do
         action :stop
       end

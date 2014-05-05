@@ -38,7 +38,7 @@ db.adapter = case app.database[:type]
                      }
                    end
                  end
-                 if app[:postgresql] && app.postgresql[:replication]
+                 if app[:postgresql] && app.postgresql[:nodes]
                    app.postgresql[:nodes].each do |host|
                      next if host == app.private_ip
                      default.postgresql.pg_hba << {

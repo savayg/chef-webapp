@@ -1,7 +1,7 @@
 <% a = {app.environment=> @db_conf.clone} %>
 <% if app[:postgresql] && app.postgresql[:nodes] %>
   <% app.postgresql[:nodes].each do |host| %>
-    <% role = app.private_ip==host ? app.postgresql[:replication] : (app.postgresql[:replication]=='master' ? 'slave': 'master') %>
+    <% role = app.database.host == host ? 'master' : 'slave' %>
     <% a["#{app.environment}_#{role}"] = @db_conf.clone %>
     <% a["#{app.environment}_#{role}"]['host'] = host %>
   <% end %>
