@@ -6,5 +6,5 @@
     <% environments["#{app.environment}_#{role}"]['host'] = host %>
   <% end %>
 <% end %>
-<%= Hash[environments.map {|env, conf| [env, conf.to_hash] }] %>
+<%= Hash[environments.map {|env, conf| [env, conf.to_hash] }].inspect %>
 <%=YAML.dump(Hash[environments.map {|env, conf| [env, conf.to_hash] }])%>
