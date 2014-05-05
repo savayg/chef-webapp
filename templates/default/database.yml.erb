@@ -6,4 +6,5 @@
     <% environments["#{app.environment}_#{role}"]['host'] = host %>
   <% end %>
 <% end %>
+abort(environments.inspect)
 <%=YAML.dump(Hash[environments])%>
