@@ -7,4 +7,4 @@
   <% end %>
 <% end %>
 
-<%=YAML.dump(Hash[environments.map {|env, conf| [env, @db_conf.merge(conf).to_hash] }])%>
+<%=YAML.dump(Hash[environments.map {|env, conf| [env, conf.to_hash] }])%>
