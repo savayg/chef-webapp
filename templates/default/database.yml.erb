@@ -6,4 +6,5 @@
     <% environments["#{app.environment}_#{role}"]['host'] = host %>
   <% end %>
 <% end %>
-<%=YAML.dump(environments)%>
+
+<%=YAML.dump(Hash[environments.map {|env, conf| [env, @db_conf.merge(conf).to_hash] }])%>
