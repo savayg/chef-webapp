@@ -3,6 +3,7 @@
 appdefs.user.name       = app.name
 appdefs.user.group      = app.user.name
 appdefs.user.home       = "/home/#{app.user.name}"
+appdefs.class_name      = app.name.split('_').map{|i| i.capitalize}.join
 
 appdefs.path            = app.user.home
 appdefs.current_path    = "#{app.path}/current"

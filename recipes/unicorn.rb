@@ -61,8 +61,8 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
       ActiveRecord::Base.establish_connection
     end
 
-    if defined?(#{app.name.camelize}) && #{app.name.camelize}::Config.segment_io_tracking && defined?(AnalyticsRuby)
-      AnalyticsRuby.init(secret: #{app.name.camelize}::Config.segment_io_secret)
+    if defined?(#{app.class_name}) && #{app.class_name}::Config.segment_io_tracking && defined?(AnalyticsRuby)
+      AnalyticsRuby.init(secret: #{app.class_name}::Config.segment_io_secret)
     end
 
     worker_pidfile = server.config[:pid].sub('.pid', ".\#{worker.nr}.pid")
