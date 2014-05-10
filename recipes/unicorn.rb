@@ -46,6 +46,9 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
     if defined? ActiveRecord::Base
       ActiveRecord::Base.connection.disconnect!
     end
+
+    #{app.unicorn.before_fork_user}
+
     old_pid = "\#{server.config[:pid]}.oldbin"
     if old_pid != server.pid
       begin
@@ -61,9 +64,7 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
       ActiveRecord::Base.establish_connection
     end
 
-    if defined?(#{app.class_name}) && #{app.class_name}::Config.segment_io_tracking && defined?(AnalyticsRuby)
-      AnalyticsRuby.init(secret: #{app.class_name}::Config.segment_io_write)
-    end
+    #{app.unicorn.after_fork_user}
 
     worker_pidfile = server.config[:pid].sub('.pid', ".\#{worker.nr}.pid")
     system("echo \#{Process.pid} > \#{worker_pidfile}")
