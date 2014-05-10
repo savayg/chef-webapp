@@ -47,7 +47,7 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
       ActiveRecord::Base.connection.disconnect!
     end
 
-    #{app.unicorn.before_fork_user.is_a?(Array) ? app.unicorn.before_fork_user.join("\n") : app.unicorn.before_fork_user}
+    #{app.unicorn.before_fork_user.is_a?(Array) ? app.unicorn.before_fork_user.join("\n    ") : app.unicorn.before_fork_user}
 
     old_pid = "\#{server.config[:pid]}.oldbin"
     if old_pid != server.pid
@@ -64,7 +64,7 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
       ActiveRecord::Base.establish_connection
     end
 
-    #{app.unicorn.after_fork_user.is_a?(Array) ? app.unicorn.after_fork_user.join("\n") : app.unicorn.after_fork_user}
+    #{app.unicorn.after_fork_user.is_a?(Array) ? app.unicorn.after_fork_user.join("\n    ") : app.unicorn.after_fork_user}
 
     worker_pidfile = server.config[:pid].sub('.pid', ".\#{worker.nr}.pid")
     system("echo \#{Process.pid} > \#{worker_pidfile}")
