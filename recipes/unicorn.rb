@@ -42,14 +42,14 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
   owner               app.user.name
   group               app.user.name
 
-  before_fork do |server, worker|
+  before_fork <<-END # do |server, worker|
     if defined? ActiveRecord::Base
       ActiveRecord::Base.connection.disconnect!
     end
 
-    eval(app.unicorn.before_fork_user.is_a?(Array) ? app.unicorn.before_fork_user.join("\n    ") : app.unicorn.before_fork_user)
+    #{app.unicorn.before_fork_user.is_a?(Array) ? app.unicorn.before_fork_user.join("\n    ") : app.unicorn.before_fork_user}
 
-    old_pid = "#{server.config[:pid]}.oldbin"
+    old_pid = "\#{server.config[:pid]}.oldbin"
     if old_pid != server.pid
       begin
         sig = (worker.nr + 1) >= server.worker_processes ? :QUIT : :TTOU
@@ -57,14 +57,16 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
       rescue Errno::ENOENT, Errno::ESRCH
       end
     end
-  end
+  END
 
-  after_fork do |server, worker|
+  after_fork <<-END # do |server, worker|
     if defined? ActiveRecord::Base
       ActiveRecord::Base.establish_connection
     end
 
-    eval(app.unicorn.after_fork_user.is_a?(Array) ? app.unicorn.after_fork_user.join("\n    ") : app.unicorn.after_fork_user)
+    #{app.unicorn.after_fork_user.is_a?(Array) ? app.unicorn.after_fork_user.join("\n    ") : app.unicorn.after_fork_user}
 
-  end
+    worker_pidfile = server.config[:pid].sub('.pid', ".\#{worker.nr}.pid")
+    system("echo \#{Process.pid} > \#{worker_pidfile}")
+  END
 end
