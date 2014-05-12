@@ -66,7 +66,5 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
 
     #{app.unicorn.after_fork_user.is_a?(Array) ? app.unicorn.after_fork_user.join("\n    ") : app.unicorn.after_fork_user}
 
-    worker_pidfile = server.config[:pid].sub('.pid', ".\#{worker.nr}.pid")
-    system("echo \#{Process.pid} > \#{worker_pidfile}")
   END
 end
