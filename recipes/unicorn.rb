@@ -42,6 +42,11 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
   owner               app.user.name
   group               app.user.name
 
+  before_exec <<-END # do
+      Dotenv.overload
+    end
+  END
+
   before_fork <<-END # do |server, worker|
     if defined? ActiveRecord::Base
       ActiveRecord::Base.connection.disconnect!
