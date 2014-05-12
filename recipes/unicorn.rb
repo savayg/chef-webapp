@@ -43,8 +43,7 @@ unicorn_config "#{app.config_path}/unicorn.rb" do
   group               app.user.name
 
   before_exec <<-END # do
-      Dotenv.overload
-    end
+    Dotenv.overload
   END
 
   before_fork <<-END # do |server, worker|
