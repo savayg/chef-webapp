@@ -18,26 +18,44 @@ case db_type
       owner app.user.name
     end
 
-    if app[:postgresql] && app.postgresql[:nodes] && app.private_ip != app.database.host
-      service 'postgresql' do
-        action :stop
-      end
+    if app[:postgresql] && app.postgresql[:nodes]
+      if app.private_ip == app.database.host #master
 
-      execute "setup initial database" do
-        command "rm -R #{node['postgresql']['config']['data_directory']}/* && pg_basebackup -D #{node['postgresql']['config']['data_directory']} --host=#{app[:database][:host]} --port=#{node['postgresql']['config']['port']}"
-        creates "#{node['postgresql']['config']['data_directory']}/recovery.conf"
-        user      "postgres"
-      end
+        file "/tmp/postgresql.trigger.5432" do
+          owner app.user.name
+          group app.user.group
+          mode  0600
+          action :touch
+          only_if do
+            File.exists?("#{node['postgresql']['config']['data_directory']}/recovery.conf")
+          end
+        end
 
-      template "#{node['postgresql']['config']['data_directory']}/recovery.conf" do
-        source "recovery.conf.erb"
-        owner "postgres"
-        group "postgres"
-        mode 0600
-      end
+      else                                 #slave
+        service 'postgresql' do
+          action :stop
+        end
 
-      service 'postgresql' do
-        action :start
+        file "/tmp/postgresql.trigger.5432" do
+          action :delete
+        end
+
+        execute "setup initial database" do
+          command "rm -R #{node['postgresql']['config']['data_directory']}/* && pg_basebackup -D #{node['postgresql']['config']['data_directory']} --host=#{app[:database][:host]} --port=#{node['postgresql']['config']['port']}"
+          creates "#{node['postgresql']['config']['data_directory']}/recovery.conf"
+          user      "postgres"
+        end
+
+        template "#{node['postgresql']['config']['data_directory']}/recovery.conf" do
+          source "recovery.conf.erb"
+          owner "postgres"
+          group "postgres"
+          mode 0600
+        end
+
+        service 'postgresql' do
+          action :start
+        end
       end
     end
   else
