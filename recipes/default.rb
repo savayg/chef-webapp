@@ -6,24 +6,29 @@ user app.user.name do
   supports  :manage_home => true
 end
 
-# RVM should come first
-include_recipe 'webapp::rvm'
-
 # Then the app type
 case app.type.downcase
   when 'rails', 'passenger'
+    include_recipe 'webapp::rvm'
     include_recipe 'webapp::passenger'
+
+    %w( nginx capistrano cron ssh ).each do |r|
+      include_recipe "webapp::#{r}"
+    end
+
   when 'unicorn'
+    include_recipe 'webapp::rvm'
     include_recipe 'webapp::unicorn'
+
+    %w( nginx capistrano cron ssh ).each do |r|
+      include_recipe "webapp::#{r}"
+    end
+
   when 'nodejs'
     raise "NodeJS support not yet implemented"
   else
-    raise "You must specify an application type (hint: passenger, unicorn, nodejs, and so forth)"
-end
-
-# Followed by nginx and others
-%w( nginx capistrano cron ssh ).each do |r|
-  include_recipe "webapp::#{r}"
+    #database only
+    #raise "You must specify an application type (hint: passenger, unicorn, nodejs, and so forth)"
 end
 
 if app.database

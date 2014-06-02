@@ -18,6 +18,10 @@ db.timeout = "5000"
 
 db.adapter = case app.database[:type]
                when /^postgres/
+                 default.postgresql.config.merge!({
+                                                    ssl: 'off'
+                 })
+
                  default.postgresql.pg_hba = [
                    {
                      user:     app.user.name,
@@ -65,7 +69,7 @@ db.adapter = case app.database[:type]
                when /^sqlite/   then "sqlite3"
              end
 
-db.environments[app.environment] = {}
+db.environments[app.environment] = {} if app['environment']
 
 default[:webapp][:postgresql][:monit][:restart_cycles] = 5
 

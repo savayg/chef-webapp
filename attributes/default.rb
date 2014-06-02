@@ -24,12 +24,12 @@ appdefs.envfile         = "#{app.shared_path}/.env"
 # TODO Future unicorn & nodejs support
 appdefs.type            = 'passenger'
 
-repo, branch = app.repository.match(/(^.*?)(?:#([^#]+))?$/)[1..2]
-appdefs.repo            = repo
-appdefs.branch          = branch || 'master'
-appdefs.ci              = nil
+#TODO - these doesnt seem to be used anywhere
+#repo, branch = app.repository.match(/(^.*?)(?:#([^#]+))?$/)[1..2]
+#appdefs.repo            = repo
+#appdefs.branch          = branch || 'master'
+#appdefs.ci              = nil
 
-appdefs.env_vars = {
-  'RAILS_ENV' => app.environment,
-  'DEFAULT_HOST' => app.url
-}
+appdefs.env_vars = {}
+appdefs.env_vars['RAILS_ENV'] = app.environment if app['environment']
+appdefs.env_vars['DEFAULT_HOST'] = app.url if app['url']
