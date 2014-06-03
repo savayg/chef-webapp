@@ -5,7 +5,7 @@ db_conf['database'] = db_conf.delete 'name'
 db_conf.delete('slaves')
 db_type = db_conf.delete('type').downcase
 
-if ['localhost', '127.0.0.1', app.private_ip].include?(app.database.host) || (app[:postgresql] && app.postgresql[:nodes])
+if ['localhost', '127.0.0.1', app[:private_ip] ].include?(app.database.host) || (app[:postgresql] && app.postgresql[:nodes])
   # create database user
   case db_type
     when /^postgres/
