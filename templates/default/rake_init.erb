@@ -21,7 +21,7 @@ case $1 in
         ;;
     restart)
         kill `cat $PID`
-        $CMD
+        $CMD &
         echo $! > $PID
         ;;
     *)
