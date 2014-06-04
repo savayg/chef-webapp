@@ -34,3 +34,7 @@ end
 if app.database
   include_recipe "webapp::db"
 end
+
+if app[:monit] && app[:monit][:daemons]
+  include_recipe "webapp::monit"
+end
