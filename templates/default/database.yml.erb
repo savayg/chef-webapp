@@ -1,14 +1,16 @@
-<% a = {app.environment=> @db_conf.clone} %>
-<% nodes = (app[:postgresql] && app.postgresql[:nodes] ? app.postgresql[:nodes] : []) | (app[:database][:slaves] ? app[:database][:slaves] : []) %>
-<% if nodes %>
-  <% nodes.each do |host| %>
-    <% role = app.database.host == host ? 'master' : 'slave' %>
-    <% a["#{app.environment}_#{role}"] = @db_conf.clone %>
-    <% a["#{app.environment}_#{role}"]['host'] = host %>
-  <% end %>
-<% end %>
-<% if node[:webapp][:rvm][:common_pkgs].include?('xvfb') %>
-    a["test"] = @db_conf.clone
-    a["test"]["database"] += '_test'
-<% end %>
+<%
+a = {app.environment=> @db_conf.clone}
+nodes = (app[:postgresql] && app.postgresql[:nodes] ? app.postgresql[:nodes] : []) | (app[:database][:slaves] ? app[:database][:slaves] : [])
+if nodes
+  nodes.each do |host|
+    role = app.database.host == host ? 'master' : 'slave'
+    a["#{app.environment}_#{role}"] = @db_conf.clone
+    a["#{app.environment}_#{role}"]['host'] = host
+  end
+end
+if node[:webapp][:rvm][:common_pkgs].include?('xvfb')
+  a["test"] = @db_conf.clone
+  a["test"]["database"] += '_test'
+end
+%>
 <%= YAML.dump(a)%>
