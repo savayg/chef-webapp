@@ -7,4 +7,8 @@
     <% a["#{app.environment}_#{role}"]['host'] = host %>
   <% end %>
 <% end %>
+<% if node[:webapp][:rvm][:common_pkgs].include?('xvfb') %>
+    a["test"] = @db_conf.clone
+    a["test"]["database"] += '_test'
+<% end %>
 <%= YAML.dump(a)%>
