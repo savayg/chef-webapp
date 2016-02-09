@@ -10,7 +10,7 @@ recipe           "webapp", "Default webapp recipe"
 
 depends 'nginx', '2.2.0' # Fixed at 2.2.0 release since we're overriding it a bit
 depends 'nodejs', '~> 1.3.0'
-depends 'postgresql', '~> 3.3.4'
+depends 'postgresql', '~> 4.0.0'
 depends 'redisio', '~> 1.7.0'
 
 # Note: These deps come from Github, and must be imported via your Cheffile (versions fixed to
