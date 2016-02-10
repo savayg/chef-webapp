@@ -15,5 +15,7 @@ depends 'redisio', '~> 1.7.0'
 
 # Note: These deps come from Github, and must be imported via your Cheffile (versions fixed to
 # ensure Github version is used or a warning is thrown)
-depends 'rvm', '~> 0.10.1' # must use version from github: 'fnichol/chef-rvm'
-depends 'monit', '~> 1.5.0' # must use version from github: 'phlipper/chef-monit'
+# depends 'rvm', '~> 0.10.1' # must use version from github: 'fnichol/chef-rvm'
+# depends 'monit', '~> 1.5.0' # must use version from github: 'phlipper/chef-monit'
+depends 'rvm',     github: 'fnichol/chef-rvm'
+depends 'monit',   github: 'phlipper/chef-monit'
